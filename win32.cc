@@ -28,7 +28,6 @@ struct netUser {
         return 0;
     }
 };
-
 struct process {
     STARTUPINFO startInfo;
     PROCESS_INFORMATION procInfo;
