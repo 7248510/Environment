@@ -28,7 +28,7 @@ struct netUser {
         return 0;
     }
 };
-struct process {
+struct processes {
     STARTUPINFO startInfo;
     PROCESS_INFORMATION procInfo;
     int createProc()
@@ -54,7 +54,7 @@ struct process {
         return 0;//Function executes  
     } 
     //After the functions have been called the last step is to call a destructor
-    ~process() {
+    ~processes() {
         //CLEAN UP https://docs.microsoft.com/en-us/windows/win32/procthread/creating-processes 
         // Wait until child process exits.
         WaitForSingleObject(procInfo.hProcess, INFINITE);
@@ -64,3 +64,10 @@ struct process {
         std::cout << "\nUtilizing a destructor to exit createprocess.";
     }
 };
+void windowsTasks()
+{
+    //VIRTUAL MACHINE WINDOWS CONFIGURATION
+    netUser windowsVM;
+    std::cout << "Removing Windows password.";
+    windowsVM.changePassword(); //Removing the default password.
+}
