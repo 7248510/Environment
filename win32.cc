@@ -10,6 +10,7 @@
 #include <lm.h>
 #include <Processthreadsapi.h>
 #include <Errhandlingapi.h>
+#include "identify.c"
 //Structures's naming conventions are prone to change throughout the programs life cycle!
 struct netUser {
     //Net user structure to hold 
@@ -68,6 +69,19 @@ void windowsTasks()
 {
     //VIRTUAL MACHINE WINDOWS CONFIGURATION
     netUser windowsVM;
+    processes testLaunch;
     std::cout << "Removing Windows password.";
     windowsVM.changePassword(); //Removing the default password.
+    testLaunch.createProc();
+    std::cout << "Correct program";
+}
+
+std::string keyCheck()
+{
+    std::string output;
+    const char OS[8] = {"Windows"};// = "Windows";// = {"Windows"}; //Allocate 6 spaces
+    int passMe{1};
+    output = identify(passMe, OS); //Pass a value to identify
+    std::cout << output;
+    return output;
 }
