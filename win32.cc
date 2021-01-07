@@ -73,13 +73,12 @@ void windowsTasks()
     std::cout << "\nRemoving Windows password.\n";
     //windowsVM.changePassword(); //Removing the default password.
     testLaunch.createProc();
-    std::cout << "Correct program!\n";
 }
 
 std::string keyCheck()
 {
     std::string output;
-    const char OS[8] = {"Windows"};// = "Windows";// = {"Windows"}; //Allocate 6 spaces
+    const char OS[8] = {"Windows"};// = "Windows";// = {"Windows"}; //Allocate 8 spaces
     int passMe{1};
     output = identify(passMe, OS); //Pass a value to identify
     std::cout << output;

@@ -4,7 +4,7 @@
 
 void keyCheck()
 {
-    std::string OS = {"Linux"};
+    const char OS[6] = {"Linux"}; //Allocate 6 spaces
     int passMe{1};
     identify(passMe, OS); //Pass a value to identify
 }

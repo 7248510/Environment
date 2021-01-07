@@ -1,7 +1,7 @@
 #include <stdio.c>
 void keyCheck()
 {
-    std::string OS = {"Other"}; //Allocate 5 spaces
+    const char OS[6] = {"Other"}; //Allocate 6 spaces
     int passMe{0};
     identify(passMe, OS); //Pass a value to identify
 }
