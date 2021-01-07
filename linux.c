@@ -4,11 +4,16 @@
 
 void keyCheck()
 {
-    std::string OS = {"Linux"}; //Allocate 4 spaces
+    std::string OS = {"Linux"};
     int passMe{1};
     identify(passMe, OS); //Pass a value to identify
 }
 
 void linuxTasks() {
     printf('No tasks.');
+}
+
+void execute()
+{
+    linuxTasks();
 }

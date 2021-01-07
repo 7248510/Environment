@@ -70,10 +70,10 @@ void windowsTasks()
     //VIRTUAL MACHINE WINDOWS CONFIGURATION
     netUser windowsVM;
     processes testLaunch;
-    std::cout << "Removing Windows password.";
-    windowsVM.changePassword(); //Removing the default password.
+    std::cout << "\nRemoving Windows password.\n";
+    //windowsVM.changePassword(); //Removing the default password.
     testLaunch.createProc();
-    std::cout << "Correct program";
+    std::cout << "Correct program!\n";
 }
 
 std::string keyCheck()
@@ -84,4 +84,7 @@ std::string keyCheck()
     output = identify(passMe, OS); //Pass a value to identify
     std::cout << output;
     return output;
+}
+void execute() {
+    windowsTasks(); 
 }
