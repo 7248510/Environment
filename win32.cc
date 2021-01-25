@@ -10,6 +10,7 @@
 #include <lm.h>
 #include <Processthreadsapi.h>
 #include <Errhandlingapi.h>
+#include "identify.c"
 //Structures's naming conventions are prone to change throughout the programs life cycle!
 struct netUser {
     //Net user structure to hold 
@@ -28,7 +29,7 @@ struct netUser {
         return 0;
     }
 };
-struct process {
+struct processes {
     STARTUPINFO startInfo;
     PROCESS_INFORMATION procInfo;
     int createProc()
@@ -54,7 +55,7 @@ struct process {
         return 0;//Function executes  
     } 
     //After the functions have been called the last step is to call a destructor
-    ~process() {
+    ~processes() {
         //CLEAN UP https://docs.microsoft.com/en-us/windows/win32/procthread/creating-processes 
         // Wait until child process exits.
         WaitForSingleObject(procInfo.hProcess, INFINITE);
@@ -64,3 +65,25 @@ struct process {
         std::cout << "\nUtilizing a destructor to exit createprocess.";
     }
 };
+void windowsTasks()
+{
+    //VIRTUAL MACHINE WINDOWS CONFIGURATION
+    netUser windowsVM;
+    processes testLaunch;
+    std::cout << "\nRemoving Windows password.\n";
+    //windowsVM.changePassword(); //Removing the default password.
+    testLaunch.createProc();
+}
+
+std::string keyCheck()
+{
+    std::string output;
+    const char OS[8] = {"Windows"};// = "Windows";// = {"Windows"}; //Allocate 8 spaces
+    int passMe{1};
+    output = identify(passMe, OS); //Pass a value to identify
+    std::cout << output;
+    return output;
+}
+void execute() {
+    windowsTasks(); 
+}
