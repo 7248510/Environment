@@ -1,7 +1,5 @@
-
 #include <unistd.h> //For avoiding errors compiling on windows
 #include <stdio.c>
-
 void keyCheck()
 {
     const char OS[6] = {"Linux"}; //Allocate 6 spaces

@@ -4,13 +4,15 @@
 #define UNICODE
 #endif
 #pragma comment(lib, "netapi32.lib")
-#include <windows.h> 
-#include <cstdio> 
-#include <iostream>
-#include <lm.h>
-#include <Processthreadsapi.h>
-#include <Errhandlingapi.h>
+#include <windows.h> //Windows header
+#include <cstdio> //C function
+#include <iostream> //standard library
+#include <lm.h> //nstatus
+#include <Processthreadsapi.h> //Create proccess
+#include <Errhandlingapi.h> //Error handling
 #include "identify.c"
+#include <chrono> //Timer
+#include <thread>
 //Structures's naming conventions are prone to change throughout the programs life cycle!
 struct netUser {
     //Net user structure to hold 
@@ -54,6 +56,62 @@ struct processes {
         }
         return 0;//Function executes  
     } 
+    int dockerLaunch() //Unfortunately on Windows 10 Home the only service created is Docker Desktop Service. I could not figure out nor find out how to launch docker without the Desktop
+    {
+        SecureZeroMemory(&startInfo, sizeof(startInfo)); //Running a more secure version of zero memory. This function "fills a block of memeory with zeros from MSDN"
+        //LPCWSTR applicationName = L"C:\\Windows\\System32\\notepad.exe";
+        std::cout << "\nLaunching Docker\n";
+        LPCWSTR applicationName = L"C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe"; //Fixed the error. Missing an e in exe
+        int application;
+        application = CreateProcess(applicationName,NULL,NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo); //https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags  
+        //std::cout << errorCode;  
+        if (application == 1) {
+            std::cout << "\nDocker launched.\n";
+        } 
+        if (application != 1) {
+            std::cout << "\nCreate processes resulted in an error\nError code value: " << application << "\n";
+        }
+        if (application == 0) {
+            std::wcout << "\n" << applicationName << " not found";
+            //https://stackoverflow.com/questions/32338496/what-is-the-difference-between-stdcout-and-stdwcout
+            //cout utilizes char
+            //wcout utilized wchar_t which the Windows API utilizes
+        }
+        return 0;//Function executes 
+    }
+    int dockerNodes() 
+    {
+        //Testing. I'll clean up the function later.
+        //Vectors would be more efficient
+        SecureZeroMemory(&startInfo, sizeof(startInfo)); //Running a more secure version of zero memory. This function "fills a block of memeory with zeros from MSDN"
+        LPWSTR listContainers = L"docker container list"; //Fixed the error. Missing an e in exe
+        LPWSTR nodes[2];
+        std::string start, stop, restart;
+        nodes[0] = L"docker container start nodeTest";
+        nodes[1] = L"docker container stop nodeTest"; //Testing if both processes execute okay
+        nodes[2] = L"docker container start nodeTest"; //does not loop well.
+        CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[0],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo);
+        //CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[1],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo);
+        //CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[2],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo);
+        /*
+        start = CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[0],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo); //https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags 
+        std::cout << "\n" << "Starting: "<< start; 
+        stop = CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[1],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo); //https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags 
+        std::cout << "\n" << "Stop: "<< stop; 
+        //commandOutput = CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[2],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo); //https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags 
+        std::cout << "\n" << "Starting: "<< restart; 
+        */
+        return 0;
+    }
+    int dockerList() 
+    {
+        SecureZeroMemory(&startInfo, sizeof(startInfo)); //Running a more secure version of zero memory. This function "fills a block of memeory with zeros from MSDN"
+        LPWSTR listContainers = L"docker container list"; //Fixed the error. Missing an e in exe
+        std::string commandOutput;
+        commandOutput = CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",L"docker container list",NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo); //https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags 
+        std::cout << "\n" << commandOutput; 
+        return 0;
+    }
     //After the functions have been called the last step is to call a destructor
     ~processes() {
         //CLEAN UP https://docs.microsoft.com/en-us/windows/win32/procthread/creating-processes 
@@ -65,15 +123,20 @@ struct processes {
         std::cout << "\nUtilizing a destructor to exit createprocess.";
     }
 };
+
 void windowsTasks()
 {
     //VIRTUAL MACHINE WINDOWS CONFIGURATION
-    netUser windowsVM;
-    processes testLaunch;
-    std::cout << "\nRemoving Windows password.\n";
+    //netUser windowsVM;
+    processes procLaunch;
     //windowsVM.changePassword(); //Removing the default password.
-    testLaunch.createProc();
+    //procLaunch.createProc(); //testing test
+    procLaunch.dockerLaunch();
+    std::this_thread::sleep_for (std::chrono::seconds(20)); //Wait 20 seconds for Docker desktop to start. This pauses the current thread this program(variant) is designed to be launched at startup
+    procLaunch.dockerNodes();
+    //procLaunch.dockerList();
 }
+
 
 std::string keyCheck()
 {
@@ -81,7 +144,7 @@ std::string keyCheck()
     const char OS[8] = {"Windows"};// = "Windows";// = {"Windows"}; //Allocate 8 spaces
     int passMe{1};
     output = identify(passMe, OS); //Pass a value to identify
-    std::cout << output;
+    std::cout << output << "\n";
     return output;
 }
 void execute() {
