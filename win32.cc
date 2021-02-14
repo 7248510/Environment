@@ -85,12 +85,21 @@ struct processes {
         //Vectors would be more efficient
         SecureZeroMemory(&startInfo, sizeof(startInfo)); //Running a more secure version of zero memory. This function "fills a block of memeory with zeros from MSDN"
         LPWSTR listContainers = L"docker container list"; //Fixed the error. Missing an e in exe
-        LPWSTR nodes[2];
+        //LPWSTR nodes[2];
+        const char * nodes[2]; //Alloc 3 spaces
         std::string start, stop, restart;
+        /*
         nodes[0] = L"docker container start nodeTest";
         nodes[1] = L"docker container stop nodeTest"; //Testing if both processes execute okay
         nodes[2] = L"docker container start nodeTest"; //does not loop well.
-        CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[0],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo);
+        */
+        nodes[0] = "docker container start nodeTest";
+        nodes[1] = "docker container stop nodeTest"; //Testing if both processes execute okay
+        nodes[2] = "docker container start nodeTest"; //does not loop well.
+        //CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[0],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo);
+        std::system(nodes[0]);
+        std::system(nodes[1]);
+        std::system(nodes[2]);
         //CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[1],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo);
         //CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[2],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo);
         /*
@@ -132,7 +141,7 @@ void windowsTasks()
     //windowsVM.changePassword(); //Removing the default password.
     //procLaunch.createProc(); //testing test
     procLaunch.dockerLaunch();
-    std::this_thread::sleep_for (std::chrono::seconds(20)); //Wait 20 seconds for Docker desktop to start. This pauses the current thread this program(variant) is designed to be launched at startup
+    std::this_thread::sleep_for (std::chrono::seconds(10)); //Wait 20 seconds for Docker desktop to start. This pauses the current thread this program(variant) is designed to be launched at startup
     procLaunch.dockerNodes();
     //procLaunch.dockerList();
 }
