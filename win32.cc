@@ -81,13 +81,13 @@ struct processes {
     }
     int dockerNodes() 
     {
+        const char * nodes[2]; //Alloc 3 nodes
         //Testing. I'll clean up the function later.
         //Vectors would be more efficient
-        SecureZeroMemory(&startInfo, sizeof(startInfo)); //Running a more secure version of zero memory. This function "fills a block of memeory with zeros from MSDN"
-        LPWSTR listContainers = L"docker container list"; //Fixed the error. Missing an e in exe
+        //SecureZeroMemory(&startInfo, sizeof(startInfo)); //Running a more secure version of zero memory. This function "fills a block of memeory with zeros from MSDN"
+        //LPWSTR listContainers = L"docker container list"; //Fixed the error. Missing an e in exe
         //LPWSTR nodes[2];
-        const char * nodes[2]; //Alloc 3 spaces
-        std::string start, stop, restart;
+        //std::string start, stop, restart;
         /*
         nodes[0] = L"docker container start nodeTest";
         nodes[1] = L"docker container stop nodeTest"; //Testing if both processes execute okay
@@ -141,7 +141,7 @@ void windowsTasks()
     //windowsVM.changePassword(); //Removing the default password.
     //procLaunch.createProc(); //testing test
     procLaunch.dockerLaunch();
-    std::this_thread::sleep_for (std::chrono::seconds(10)); //Wait 20 seconds for Docker desktop to start. This pauses the current thread this program(variant) is designed to be launched at startup
+    std::this_thread::sleep_for (std::chrono::seconds(30)); //Wait 20 seconds for Docker desktop to start. This pauses the current thread this program(variant) is designed to be launched at startup
     procLaunch.dockerNodes();
     //procLaunch.dockerList();
 }
