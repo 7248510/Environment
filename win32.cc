@@ -1,5 +1,9 @@
 // typedef const wchar_t *LPCWSTR; = LPCWSTR which is required(netuserchangepassword function)
 //https://docs.microsoft.com/en-us/cpp/cpp/char-wchar-t-char16-t-char32-t?view=vs-2019
+/*
+git reset --hard HEAD
+git pull
+*/
 #ifndef UNICODE
 #define UNICODE
 #endif
@@ -13,6 +17,7 @@
 #include "identify.c"
 #include <chrono> //Timer
 #include <thread>
+#include <vector>
 //Structures's naming conventions are prone to change throughout the programs life cycle!
 struct netUser {
     //Net user structure to hold 
@@ -81,36 +86,44 @@ struct processes {
     }
     int dockerNodes() 
     {
-        const char * nodes[2]; //Alloc 3 nodes
-        //Testing. I'll clean up the function later.
-        //Vectors would be more efficient
-        //SecureZeroMemory(&startInfo, sizeof(startInfo)); //Running a more secure version of zero memory. This function "fills a block of memeory with zeros from MSDN"
-        //LPWSTR listContainers = L"docker container list"; //Fixed the error. Missing an e in exe
-        //LPWSTR nodes[2];
-        //std::string start, stop, restart;
-        /*
-        nodes[0] = L"docker container start nodeTest";
-        nodes[1] = L"docker container stop nodeTest"; //Testing if both processes execute okay
-        nodes[2] = L"docker container start nodeTest"; //does not loop well.
-        */
-        nodes[0] = "docker container start nodeTest";
-        nodes[1] = "docker container stop nodeTest"; //Testing if both processes execute okay
-        nodes[2] = "docker container start nodeTest"; //does not loop well.
-        //CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[0],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo);
-        std::system(nodes[0]);
-        std::system(nodes[1]);
-        std::system(nodes[2]);
-        //CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[1],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo);
-        //CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[2],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo);
-        /*
-        start = CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[0],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo); //https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags 
-        std::cout << "\n" << "Starting: "<< start; 
-        stop = CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[1],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo); //https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags 
-        std::cout << "\n" << "Stop: "<< stop; 
-        //commandOutput = CreateProcess(L"C:\\Program Files\\Docker\\Docker\\resources\\docker.exe",nodes[2],NULL,NULL,FALSE, 0,NULL,NULL,&startInfo,&procInfo); //https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags 
-        std::cout << "\n" << "Starting: "<< restart; 
-        */
+        std::cout << "Launching 4 nodes\n";
+        int nodeCount = 4;
+        int keyCount = 0;
+        for (int i = 0; i < nodeCount; i++) {
+            launch(nodeCount,i);
+        }
         return 0;
+    }
+    int launch(int vec, int key) {
+        const char * glitch [4];
+        //Implement a unit test
+        if (vec > 0) {
+            if (key == 0) {
+                glitch[0] = "echo TEST 1";
+                std::system(glitch[0]);
+            }
+            if (key == 1) {
+                glitch[1] = "echo TEST 2";              
+                std::system(glitch[1]);
+            }
+            if (key == 2) {
+                glitch[2] = "echo TEST 3"; 
+                std::system(glitch[2]);
+            }
+            if (key == 3) {
+                glitch[3] = "echo TEST 4";
+                std::system(glitch[3]);
+            }
+            return 0;
+        } 
+        else if (vec <= 0 || key == NULL) {
+              //  std::cout << "Exiting\nNo nodes to be launched or the key is null";
+                return 1;
+            }
+        else {
+            std::cout << "unknown error";
+            return 1;
+        }
     }
     int dockerList() 
     {
@@ -129,7 +142,7 @@ struct processes {
         // Close process and thread handles. 
         CloseHandle(procInfo.hProcess);
         CloseHandle(procInfo.hThread);
-        std::cout << "\nUtilizing a destructor to exit createprocess.";
+        std::cout << "\nDestructor call";
     }
 };
 
@@ -137,11 +150,15 @@ void windowsTasks()
 {
     //VIRTUAL MACHINE WINDOWS CONFIGURATION
     //netUser windowsVM;
+
     processes procLaunch;
+
     //windowsVM.changePassword(); //Removing the default password.
     //procLaunch.createProc(); //testing test
-    procLaunch.dockerLaunch();
-    std::this_thread::sleep_for (std::chrono::seconds(30)); //Wait 20 seconds for Docker desktop to start. This pauses the current thread this program(variant) is designed to be launched at startup
+
+    //procLaunch.dockerLaunch();
+    //std::this_thread::sleep_for (std::chrono::seconds(30)); //Wait 20 seconds for Docker desktop to start. This pauses the current thread this program(variant) is designed to be launched at startup
+
     procLaunch.dockerNodes();
     //procLaunch.dockerList();
 }
